@@ -1,0 +1,1 @@
+Approved note number two: the server only exposes files in this folder. 
