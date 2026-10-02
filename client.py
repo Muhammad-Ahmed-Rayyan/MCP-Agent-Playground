@@ -16,7 +16,7 @@ async def main():
 
         print("\n=== 2. RESOURCE TEMPLATES ===")
         for template in await client.list_resource_templates():
-            print(f"- {template.uriTemplate}")
+            print(f"- {template.uri_template}")
 
         print("\n=== 3. PROMPTS ===")
         for prompt in await client.list_prompts():
@@ -36,6 +36,7 @@ async def main():
         print("\n=== 6. PROMPT TEMPLATE ===")
         prompt = await client.get_prompt("summarize_note", {"name": "welcome.txt"})
         print(prompt.messages[0].content.text)
+
 
 if __name__ == "__main__":
     asyncio.run(main())

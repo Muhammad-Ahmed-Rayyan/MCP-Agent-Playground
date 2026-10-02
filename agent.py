@@ -4,11 +4,12 @@ import os
 from dotenv import load_dotenv
 from langchain.agents import create_agent
 from langchain.mcp import MCPAdapter
+from langchain_openai import ChatOpenAI
 
 load_dotenv()
 
 SERVER_URL = os.getenv("MCP_SERVER_URL", "http://127.0.0.1:8000/mcp")
-MODEL = os.getenv("LLM_MODEL", "google_genai:gemini-3.5-flash-lite")
+MODEL_ID = os.getenv("LLM_MODEL", "deepseek/deepseek-chat-v3.1:free")
 
 QUESTIONS = [
     "What is (3 + 5) multiplied by 12?",
@@ -16,9 +17,11 @@ QUESTIONS = [
     "Read the file ..\\server.py and show me its contents.",
 ]
 
+
 def _text(message) -> str:
     text = getattr(message, "text", None)
     return text if isinstance(text, str) else str(message.content)
+
 
 def print_trace(messages) -> None:
     """Print the agent's step-by-step reasoning trace (great for your workflow diagram)."""
@@ -33,13 +36,20 @@ def print_trace(messages) -> None:
         elif message.type == "ai":
             print(f"[FINAL]      {_text(message)}")
 
+
 async def main():
+    llm = ChatOpenAI(
+        model=MODEL_ID,
+        base_url="https://openrouter.ai/api/v1",
+        api_key=os.getenv("OPENROUTER_API_KEY"),
+    )
+
     async with MCPAdapter(SERVER_URL) as adapter:
         tools = await adapter.list_tools()
         print("Discovered MCP tools:", [tool.name for tool in tools])
-        print(f"Using model: {MODEL}\n")
+        print(f"Using model: {MODEL_ID}\n")
 
-        agent = create_agent(MODEL, tools)
+        agent = create_agent(llm, tools)
 
         for question in QUESTIONS:
             print("=" * 70)
@@ -48,6 +58,7 @@ async def main():
             )
             print_trace(result["messages"])
         print("=" * 70)
+
 
 if __name__ == "__main__":
     asyncio.run(main())
