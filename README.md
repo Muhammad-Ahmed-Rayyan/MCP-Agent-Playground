@@ -32,7 +32,7 @@ Built with the tools and technologies:
 LangChain Agent → MCP Client (MCPAdapter / FastMCP) → MCP Server (FastMCP) → Tool / Resource / Prompt → Result → Agent
 ```
 
-![MCP Architecture](docs/diagrams/01-mcp-architecture.png)
+![MCP Architecture](docs/screenshots/01-mcp-architecture.png)
 
 See `docs/diagrams/` for the full set of diagrams (architecture, agent-tool flow, and the security-refusal flow), each with a `.mmd` source file and a rendered `.png`.
 
